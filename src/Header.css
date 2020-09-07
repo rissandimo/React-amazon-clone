@@ -1,0 +1,12 @@
+.header{
+    background-color: #131921;
+}
+
+.header__logo{
+    margin: 18px 20px 0 20px;
+    width: 100px;
+}
+
+.header__logo:hover{
+    cursor: pointer;
+}
