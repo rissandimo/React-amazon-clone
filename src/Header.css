@@ -4,6 +4,10 @@
     display: flex;
 }
 
+.header__basketCount{
+    margin: 0 10px;
+}
+
 .header__link{
     margin: 0 10px;
     color: #fff;
@@ -31,11 +35,16 @@
     margin: 0 10px;
 }
 
-.header__option .header__option1{
+.header__optionBasket{
+    align-items: center;
+    display: flex;
+}
+
+.header__option1{
     font-size: 10px;
 }
 
-.header__option .header__option2{
+.header__option2{
     font-size: 13px;
     font-weight: 800;
 }
