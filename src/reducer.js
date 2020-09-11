@@ -30,9 +30,23 @@ const reducer = (state, action) => {
             return { 
                 ...state,
                 basket: [...state.basket, action.item]
-             }
+             };
         case 'REMOVE_FROM_BASKET':
-            return { state }
+
+            //  copy current basket items
+            let newBasket = [...state.basket];
+
+            // traverse basket - check every item for id clicked
+            const indexToDelete = state.basket.findIndex((currentId) => currentId.id === action.id);
+
+            // item exists in basket -> remove it
+            if(indexToDelete >= 0){
+                newBasket.splice(indexToDelete, 1);
+            }else{
+                console.warn(`item with id: ${indexToDelete} does not exist`);
+            }
+
+            return { ...state, basket: newBasket };
         default:
             return state;   
     }
