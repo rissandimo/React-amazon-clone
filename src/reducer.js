@@ -1,7 +1,25 @@
 // Data layer logic
 
 export const initialState = {
-    basket: []
+    basket: [{
+                id: "123451",
+                title: 
+                    "The Lean Startup: How Constant Innovation Creates",
+                price: 10,
+                rating: 4,
+                image:
+                     "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRLDGCIreAxtmYES-b0drzc9kxKX5KwHC37Y7tNeuJIxQXCl6TOkQMiDPzxgwnq2IpBrpKtQ8ED&usqp=CAc" 
+             },
+             {
+                id: "123452",
+                title: 
+                    "The Lean Startup: How Constant Innovation Creates",
+                price: 10,
+                rating: 4,
+                image:
+                     "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRLDGCIreAxtmYES-b0drzc9kxKX5KwHC37Y7tNeuJIxQXCl6TOkQMiDPzxgwnq2IpBrpKtQ8ED&usqp=CAc" 
+             }],
+    user: null
 };
 
 // event 
