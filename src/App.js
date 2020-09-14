@@ -22,7 +22,6 @@ function App() {
         <Home />
         </Route>
       </Switch>
-        App component
       </div>
     </Router>  
   );
