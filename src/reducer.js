@@ -31,6 +31,7 @@ const reducer = (state, action) => {
             }else{
                 console.warn(`item with id: ${indexToDelete} does not exist`);
             }
+            return { ...state, basket: newBasket };
         case 'SET_USER':
             return {
                 ...state,
@@ -38,7 +39,6 @@ const reducer = (state, action) => {
             }
 
 
-            return { ...state, basket: newBasket };
         default:
             return state;   
     }
