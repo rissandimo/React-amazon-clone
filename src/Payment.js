@@ -5,6 +5,7 @@ import { useStateValue } from './StateProvider.js';
 import { Link, useHistory } from 'react-router-dom';
 import { getBasketTotal } from './reducer';
 import axios from './axios';
+import { db } from './firebase';
 
 // Utility Libraries
 import CurrencyFormat from 'react-currency-format';
@@ -63,6 +64,19 @@ function Payment(){
                 card: elements.getElement(CardElement)
             }
         }).then(({ paymentIntent }) => { // payment confirmation
+
+            // push order to db - items, amount and timestamp
+            db
+            .collection('users')
+            .doc(user?.uid)
+            .collection('orders')
+            .doc(paymentIntent.id)
+            .set({
+                basket: basket,
+                amount: paymentIntent.amount,
+                created: paymentIntent.created
+            })
+
             setSucceeded(true);
             setError(null);
             setProcessing(false);
