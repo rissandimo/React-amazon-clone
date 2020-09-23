@@ -66,7 +66,12 @@ function Payment(){
             setSucceeded(true);
             setError(null);
             setProcessing(false);
-// redirect user to orders page rather than payment page
+
+            dispatch({
+                type: 'EMPTY_BASKET'
+            })
+
+            // redirect user to orders page rather than payment page
             history.replace('/orders');
         })
 
