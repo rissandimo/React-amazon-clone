@@ -1,32 +1,74 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Payment.css';
 import CheckoutProduct from './CheckoutProduct';
 import { useStateValue } from './StateProvider.js';
-import { Link } from 'react-router-dom';
-
-import CurrencyFormat from 'react-currency-format';
+import { Link, useHistory } from 'react-router-dom';
 import { getBasketTotal } from './reducer';
+import axios from './axios';
 
+// Utility Libraries
+import CurrencyFormat from 'react-currency-format';
 
 // Strip
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { CardElement,  useElements, useStripe } from '@stripe/react-stripe-js';
 
 function Payment(){
+
+    const history = useHistory();
 
     const [{ basket, user }, dispatch] = useStateValue();
 
     const [disabled, setDisabled] = useState(true);
     const [error, setError] = useState(null);
+    const [succeeded, setSucceeded] = useState(false);
+    const [processing, setProcessing] = useState("");
+    const [clientSecret, setClientSecret] = useState(true);
 
-    const element = useElements();
+    const elements = useElements();
     const stripe = useStripe();
+
+    // generate stripe secret -> allows to charge a customer
+    // each time basket changes -> need to re-generate stripe secret -> notify stripe of new carts contents/price
+    useEffect( () => {
+
+        const getClientSecret = async () => {
+            const response = await axios({
+                method: 'post',
+                // Convert total to subunits (ex cents)
+                url: `/payments/create?total=${getBasketTotal(basket) * 100}`
+            });
+
+            setClientSecret(response.data.clientSecret);
+        }
+
+        getClientSecret();
+
+    }, [basket]);
+
+    console.log('client secret ---', clientSecret);
 
     const handleChange = event => {
         setDisabled(event.empty);
         setError(event.error? event.error.message : "");
     }
 
-    const handleSubmit = event => {
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // prevent multiple 'buy now' clicks
+        setProcessing(true);
+
+        const payload = await stripe.confirmCardPayment(clientSecret, {
+            payment_method : {
+                card: elements.getElement(CardElement)
+            }
+        }).then(({ paymentIntent }) => { // payment confirmation
+            setSucceeded(true);
+            setError(null);
+            setProcessing(false);
+// redirect user to orders page rather than payment page
+            history.replace('/orders');
+        })
 
     }
 
@@ -85,8 +127,13 @@ function Payment(){
                                     thousandSeparator={true}
                                     prefix={"$"}
                                />
-            
+                        {/* Disable button if processing, disabld or succeded are true
+                        If order is being processed - display processed; otherwise show Buy Now text */}
+                               <button disabled={processing || disabled || succeeded}>
+                                   <span>{processing ? <p>Processing</p>: "Buy Now"}</span>
+                               </button>
                             </div>
+                            {error && <div>{error}</div>}
                         </form>
                     </div>
                 </div>

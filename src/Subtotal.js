@@ -7,6 +7,7 @@ import { getBasketTotal } from './reducer';
 
 // Utility Libraries
 import CurrencyFormat from 'react-currency-format';
+
 function Subtotal(){
 
     // browser history
