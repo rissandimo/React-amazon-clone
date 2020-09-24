@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from './firebase';
 
+import Order from './Order';
 import './Orders.css';
 import { useStateValue } from './StateProvider';
 
@@ -12,24 +13,31 @@ function Orders() {
     // Display all orders by date - descending
     // When new order is placed - user is redirected to orders page and shown the most recent order on top
     useEffect( () => {
-        
-        db
-          .collection('users')
-          .doc(user?.uid)
-          .collection('orders')
-          .orderBy('created', 'desc')
-          .onSnapshot( snapshot => ( // update data for any change in db
-              setOrders(snapshot.docs.map(doc => ({
-                  id: doc.id,
-                  data: doc.data()
-              })))
-          ))
-
-    }, []); 
-
+        if(user){
+            db
+              .collection('users')
+              .doc(user?.uid)
+              .collection('orders')
+              .orderBy('created', 'desc')
+              .onSnapshot( snapshot => ( // update data for any change in db
+                  setOrders(snapshot.docs.map(doc => ({
+                      id: doc.id,
+                      data: doc.data()
+                  })))
+              ))
+    
+            }else{
+                setOrders([])
+            }
+        }, [user])
     return (
         <div className="orders">
-            orders component
+            <h1>Your Orders</h1>
+            <div className="orders__order">
+                {orders?.map(order => (
+                    <Order order={order}/>
+                ))}
+            </div>
         </div>
     )
 }
